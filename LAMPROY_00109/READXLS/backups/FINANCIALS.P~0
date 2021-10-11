@@ -1,0 +1,336 @@
+/*
+---------------------------------------------------
+  €’‘ - “•ƒ†‘ .„.
+  CONVERT XLS TO ASCCI ‚€ ‚„”“€ ‚‘’‰†‘ DLOG
+             ‹“‘‰‘ —€†‘  16-06-2004
+---------------------------------------------------
+*/
+
+  #include "FiveWin.ch"
+  #include "struct.ch"
+  #define NTRIM(n)  ( LTrim(Str(n)) )
+  #define CLR_NBLUE  nRGB( 128, 128, 192)
+
+//-------------------------------------------------
+FUNCTION main()
+//-------------------------------------------------
+   public lCUR := "\"+CURDIR()
+   PUBLIC lDLL := lCUR  +"\DLL\"
+   PUBLIC  hBorland , hFwctrls
+   PUBLIC cNotas := "LIne : "   &&  , cMeter := 9999999
+   public oMeter , cMeter := 0 ,  oSay , cGetXls := ""
+
+   PUBLIC  cXLSString := "Excel file|*.XLS"
+   PUBLIC cGetXls := lCUR + "\GEFYRA\012004.xls"
+   PUBLIC cGetTxt := lCUR + "\PNI\Dlgcx014.pni"
+   PUBLIC cDapo := CTOD(SPACE(10)) , cDeos := CTOD(SPACE(10))
+
+
+   SET DATE FRENCH
+   SET EPOCH TO  1990
+   SET DATE FORMAT TO "DD/MM/YYYY"
+
+   hBorland := LoadLibrary( lDLL + "BWCC.DLL")
+   hFwctrls := LoadLibrary( lDLL + "FWCTRLS.DLL")
+
+
+  SET RESOURCES TO  ( lDLL + "READXLS.DLL"   )
+
+   DEFINE FONT oFnt36  NAME GetSystemFont()   SIZE 0,-36  NESCAPEMENT 90*10
+
+   nAcolor := RGB(205, 205, 193)
+   nBcolor := RGB(193, 205, 193)
+
+      cXLSString := "Excel file|*.XLS|"+;
+                    "All   file|*.*  "
+
+      cTXTString := "ASCII file|*.PNI|"+;
+                    "All   file|*.*  "
+  DEFINE FONT oFont   NAME GetSystemFont()   SIZE 0,-12  && NCHARSET 161
+
+  SET _3DLOOK ON
+
+  DEFINE DIALOG oDlg RESOURCE "GEFYRA" ;
+   COLOR    nAcolor , nBcolor  ;
+
+
+  REDEFINE GET oGetXls VAR cGetXls ID 102 OF oDlg ;
+           FONT oFont
+  REDEFINE GET oGetTxt VAR cGetTxt ID 105 OF oDlg ;
+           FONT oFont
+
+
+//   REDEFINE  BTNBMP ID 106 FILENAME lCUR + "\openXls.bmp"  OF oDlg ;
+//      ACTION (cGetXls := cGetDir32("aaaaaaaaaaaa") ,  oGetXls:Refresh() )
+
+
+ REDEFINE  BTNBMP ID 106 FILENAME lCUR + "\openXls.bmp"  OF oDlg ;
+    ACTION ( cGetXls :=  cGetFile32(    cXLSString                ,;
+             "Επέλεξε ενα Αρχείο Excel " ) ,  oGetXls:Refresh() )
+
+
+   REDEFINE  BTNBMP ID 107 FILENAME lCUR + "\openXls.bmp"  OF oDlg ;
+      ACTION ( cGetTxt :=  cGetFile32(  cTXTString                  ,;
+               "Επέλεξε το αρχείο Εξόδου " ),  oGetTxt:Refresh() )
+
+  REDEFINE GET oDapo   VAR cDapo   ID 108 OF oDlg ;
+           FONT oFont  valid !empty(cDapo)
+
+  REDEFINE GET oDeos   VAR cDeos   ID 109 OF oDlg ;
+           FONT oFont  valid !empty(cDeos)
+
+  REDEFINE SAY oSay VAR cNotas ID 104 OF oDlg ;
+           color "w/r"  FONT oFont
+
+   REDEFINE METER oMeter VAR cMeter  ID 103 OF oDlg
+
+   REDEFINE BUTTON ID 100 OF oDlg ;
+      ACTION  ( DISEMP(oDlg,.t.)   , Test() , DISEMP(oDlg,.f.)   )
+   REDEFINE BUTTON ID 101 OF oDlg ;
+      ACTION  oDlg:End()
+
+  ACTIVATE DIALOG oDlg  CENTERED   ;
+ ON INIT (oDlg:SetColor( nAcolor , nBcolor )  )     ;
+ ON PAINT  SayRotated(oDlg,300,0,"www.dbSoft.gr",oFnt36, CLR_NBLUE , ,.t.)
+
+
+   SET RESOURCES TO
+   FreeLibrary( hBorland )
+   FreeLibrary( hFwctrls )
+
+return(.t.)
+//-------------------------------------------------
+FUNCTION Test()
+//-------------------------------------------------
+
+
+Local   oExcel, oSheet, oWin , nRow , nCol
+Local   cMyFile := trim(cGetXls)
+
+Local   Prn_file  :=   cGetTxt    && lCUR + "\GEFYRA.TXT"
+Local   ERR_file  :=   lCUR + "\ERR.TXT"
+Local   Handle := FCREATE( Prn_file )
+Local   Herr   := FCREATE( Err_file )
+Local   ENDL := CHR(13)+CHR(10)
+Local   ENDF := CHR(26)
+local   A00 := A95 := A98 := 0
+local   P00 := P95 := P98 := 0
+local   D00 := 0    && DAPANES
+
+
+SET DATE FORMAT TO "DD-MM-YY"
+
+oExcel := TOleAuto():New( "Excel.Application" )   //Start Excel OLE
+oExcel:Workbooks:Add()                            //Open Excel with empty book
+oExcel:WorkBooks:Open(cMyFile)                    //open existing file
+
+oExcel:Visible := .F.                             //display or hide MS-Excel
+oSheet := oExcel:Get("ActiveSheet")               //Get active sheet
+
+nRows := oSheet:UsedRange:Rows:Count()            //returns the number of used rows
+nCols := oSheet:UsedRange:Columns:Count()         //returns the number of used columns
+oMeter:nTotal :=  nRows
+cIDOld := TRAN(oSheet:Cells( 1 , 1 ):Value ,"######")
+cKIN := ""
+
+FWRITE( Handle  , NTRIM(DAY(DATE())) + " "+ NTRIM(MONTH(DATE())) +" "+ NTRIM(YEAR(DATE()))  + ENDL )
+
+FOR nRow := 1 TO   nRows
+
+    oMeter:Set(nRow)
+    oMeter:Refresh()  && 23-05-2005
+    cNotas :=  "Line : " + tran( nRow ,"######") + " of " + tran( nRows ,"######")     ; oSay:Refresh()
+    cDATE  :=  oSheet:Cells( nRow , 6 ):Value   //read data from a cell
+    cKIN   :=  oSheet:Cells( nRow , 2 ):Value
+
+    IF VALTYPE( cDATE ) == "D" ; cDATE := DTOC(cDATE) ; ENDIF
+
+ IF CTOD(cDATE) >= cDapo  .AND. CTOD(cDATE) <= cDeos  .AND. ;
+    LEFT( cKIN ,2 ) == "ΚΣ"
+
+   cIDNew  := TRAN(oSheet:Cells( nRow , 1 ):Value ,"######")
+   IF cIDNew # cIDOld
+      cIDOld := cIDNew
+      FWRITE( Handle  , ANSITOOEM( ""  + ENDL )  )
+   ENDIF
+   cHMER   :=  "001"
+   cIDLOG  :=  oSheet:Cells( nRow , 4 ):Value
+
+ //  IF LEFT(cIDLOG,13) == OEMTOANSI("30.00.01.0000")
+ //    cIDLOG := OEMTOANSI("30.00.00.0000")
+ //  ENDIF
+//   cPARAST :=  oSheet:Cells( nRow , 2):Value + " "+ TRAN(oSheet:Cells( nRow , 3):Value ,"######")
+   cPARAST :=  oSheet:Cells( nRow , 10):Value
+   cAITIOL :=  oSheet:Cells( nRow , 9):Value
+   cXREO   :=  TRAN(oSheet:Cells( nRow , 8):Value , "###############.##")
+   cPIST   :=  TRAN(oSheet:Cells( nRow , 7):Value , "###############.##")
+   cAITIOL :=  CONVAITIOL( cAITIOL )
+   STT := ""
+   STT += cHMER
+   STT += cDATE
+   STT += RPAD( cIDLOG    ,13," ")
+   STT += RPAD( cPARAST   ,13," ")
+   STT += RPAD( cAITIOL   ,25," ")
+   STT += SPACE(9)
+   STT += SPACE(3)
+   STT += SPACE(13)
+   STT += "4"
+   STT += SPACE(8)
+   IF !EMPTY( VAL(cXREO) ) ; STT += "1" + PADL( cXREO  ,20," ")   ; ENDIF
+   IF !EMPTY( VAL(cPIST) ) ; STT += "2" + PADL( cPIST  ,20," ")   ; ENDIF
+
+   FWRITE( Handle  , ANSITOOEM( STT + ENDL )  )
+    DO  CASE
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("70.00")
+             P00 += val(cPIST)
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("70.95")
+             P95 += val(cXREO)
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("70.98")
+             P98 += val(cXREO)
+
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("20.00")
+             A00 += val(cXREO)
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("20.95")
+             A95 += val(cPIST)
+        CASE LEFT( cIDLOG ,05)  == OEMTOANSI("20.98")
+             A98 += val(cPIST)
+
+        CASE LEFT( cIDLOG ,01)  == OEMTOANSI("6"    )
+             D00 += val(cXREO)  && DAPANES
+    END CASE
+
+ ENDIF
+NEXT
+
+
+  FWRITE( Handle  , ENDL+ ENDF   )
+  FCLOSE(Prn_file)
+
+  FWRITE( Herr    , OEMTOANSI( "€‚„‘                     " ) + ENDL    )
+  FWRITE( Herr    , ANSITOOEM( "20.00 "+TRAN(A00,"######.##" ) + ENDL )  )
+  FWRITE( Herr    , ANSITOOEM( "20.95 "+TRAN(A95,"######.##" ) + ENDL )  )
+  FWRITE( Herr    , ANSITOOEM( "20.98 "+TRAN(A98,"######.##" ) + ENDL )  )
+  FWRITE( Herr    , OEMTOANSI( "ƒ€€„‘                    " ) + ENDL    )
+  FWRITE( Herr    , ANSITOOEM( "64.00 "+TRAN(D00,"######.##" ) + ENDL )  )
+
+  FWRITE( Herr    , OEMTOANSI( "                           " ) + ENDL    )
+  FWRITE( Herr    , OEMTOANSI( "—†‘„‘                   " ) + ENDL    )
+
+  FWRITE( Herr    , ANSITOOEM( "70.00 "+TRAN(P00,"######.##" ) + ENDL )  )
+  FWRITE( Herr    , ANSITOOEM( "70.95 "+TRAN(P95,"######.##" ) + ENDL )  )
+  FWRITE( Herr    , ANSITOOEM( "70.98 "+TRAN(P98,"######.##" ) + ENDL )  )
+
+  FWRITE( Herr    , ENDL+ ENDF   )
+  FCLOSE(Err_file)
+
+  oMeter:Set(0)
+  oMeter:Refresh()
+oExcel:Quit()                                       //Close MS Excel application
+
+oSheet:End()                                        //End oSheet
+
+oExcel:End()                                        //End oExcel
+
+
+
+MSGINFO( " Η Εργασία Ολοκληρώθηκε επιτυχώς " ,"DataBit"  )
+
+//  ShellExecute(  ,"open","EDIT.COM", Prn_file  ,,1)
+  ShellExecute(  ,"open","notepad.exe", Err_file  ,,1)
+
+SET DATE FORMAT TO "DD/MM/YYYY"
+
+
+RETURN ( .T. )
+//------------------------------
+STATIC FUNCTION CONVAITIOL( cAITIO )
+//------------------------------
+LOCAL NS := "" , cC := 0
+   cAITIO := TRIM(cAITIO )
+   SIZE   := LEN( cAITIO )
+   FOR i := 1 TO SIZE
+      NS := SUBSTR( cAITIO , (SIZE-cC)  , 1 )
+      IF NS == OEMTOANSI("-") ; EXIT ; ENDIF
+      cC++
+   NEXT
+
+RETURN( RIGHT( cAITIO , cC)  )
+* ============================================================================
+* Syntax:   PADL(exp,expN,<expC>)
+* Argument: exp    = character, numeric or date value to pad
+*           expN   = lenght of character string to return
+*           <expC> = character to pad, if not specified spaces are used
+* Return:   String
+* Usage:    pad a character string on the left with a fill character
+* Example:  ? "["+PADL("per",10)+"]"
+*           gives   [       per]
+*           ? PADL("per",10,"0")
+*           gives    0000000per
+* ============================================================================
+  FUNC PADL
+  PARA lexp, lno, lpad
+  RETU RIGHT(REPL(IF(PCOUNT()=3,lpad," "),lno)+ALLTRIM(TRANS(lexp,"")),lno)
+
+
+  FUNC RPAD
+  PARA lexp, lno, lpad
+  RETURN LEFT(  ALLTRIM(TRANS(lexp,""))  +  REPL(IF(PCOUNT()=3,lpad," ") ,lno) ,lno)
+
+
+******************************************************************************
+Function SayRotated(oWnd,Y,X,cPrompt,oFont,nClrText,nClrPane,l3D)
+******************************************************************************
+  Local hDC:=oWnd:hDC
+  DEFAULT nClrText:=CLR_BLUE, l3D:=.T.
+
+  IF l3D
+    DrawRotated(hdc, cPrompt, Y + 1, X + 1, CLR_BLACK,nClrPane,oFont)
+    DrawRotated(hdc, cPrompt, Y - 1, X - 1, nClrText,nClrPane,oFont)
+  ENDIF
+  DrawRotated(hdc, cPrompt, Y , X , nClrText,nClrPane,oFont)
+
+return
+
+******************************************************************************
+Static Function DrawRotated(hDC,cPrompt,Y,X,nClrText,nClrPane,oFont)
+  Local hOldFont, nOldMode, nOldClrText, nOldClrPane
+
+  nOldClrText:=SetTextColor(hDC,nClrText)
+  if nClrPane<>nil
+    nOldClrPane:=SetBkColor(hDC,nClrPane)
+  else
+    nOldBkMode:=SetBkMode(hDC,1)
+  endif
+  hOldFont:=SelectObject(hDC,oFont:hFont)
+  TextOut(hDC,Y,X,cPrompt,Len(cPrompt))
+  SelectObject(hDC,hOldFont)
+  if nClrPane<>nil
+    SetBkColor(hDC,nOldClrPane)
+  else
+    SetBkMode(hDC,nOldBkMode)
+  endif
+  SetTextColor(hDC,nOldClrText)
+return
+
+//----------------------------
+FUNCTION GetSystemFont()
+//----------------------------
+RETURN  "Arial"
+//RETURN  "Courier New"
+
+//RETURN "Arial Greek"
+//RETURN "Comic Sans MS"
+
+//--------------------------
+STATIC FUNCTION DISEMP( oDlg ,flag  )
+//--------------------------
+
+FOR i = 1 TO LEN( oDlg:aControls )
+    IF UPPER( oDlg:aControls[ i ]:ClassName() ) = "TGET"
+       IF flag
+         oDlg:aControls[ i ]:Disable()
+       ELSE
+         oDlg:aControls[ i ]:Enable()
+       ENDIF
+    ENDIF
+NEXT

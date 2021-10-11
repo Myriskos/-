@@ -1,0 +1,24 @@
+// ΣΕΝΑΡΙΟ ΠΟΡΩΝ - δημιουργός: "Pelles C για Windows, έκδοση 8.00".
+
+//#include <windows.h>
+//#include <commctrl.h>
+//#include <richedit.h>
+//#include "thlkat.h"
+#include "\fwh\include\winapi.ch"
+//LANGUAGE LANG_GREEK,SUBLANG_GREEK_GREECE
+
+pelates DIALOG 6, 18, 426, 290
+//STYLE DS_SHELLFONT|WS_POPUP|DS_MODALFRAME|DS_CONTEXTHELP|DS_3DLOOK|WS_CAPTION|WS_SYSMENU|WS_VISIBLE
+STYLE WS_POPUP | WS_VISIBLE | WS_DLGFRAME
+CAPTION "Τηλεφωνικός κατάλογος"
+FONT 8, "Tahoma"
+{
+  CONTROL "OK", IDOK, "Button", WS_TABSTOP, 348, 228, 45, 15
+  CONTROL "Cancel", IDCANCEL, "Button", WS_TABSTOP, 348, 248, 45, 15
+  CONTROL "Ονοματεπώνυμο", 4001, "Static", WS_GROUP, 36, 28, 152, 16
+  CONTROL "Διέθυνση", 4002, "Static", WS_GROUP, 36, 52, 152, 16
+  CONTROL "Τηλέφωνο", 4003, "Static", WS_GROUP, 36, 72, 152, 16
+  CONTROL "e-mail", 4004, "Static", WS_GROUP, 36, 100, 152, 16
+  CONTROL "", 4005, "ListBox", LBS_SORT|LBS_NOTIFY|WS_VSCROLL|WS_BORDER|WS_TABSTOP, 240, 24, 164, 192
+}
+

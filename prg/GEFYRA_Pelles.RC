@@ -1,0 +1,46 @@
+// ΣΕΝΑΡΙΟ ΠΟΡΩΝ - δημιουργός: "Pelles C για Windows, έκδοση 8.00".
+
+//#include <windows.h>
+//#include <commctrl.h>
+//#include <richedit.h>
+//#include "..\..\FWH\INCLUDE\WINAPI.CH"
+//#include "\fwh\include\winapi.ch"
+LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
+
+SUPER ICON "..\\ICON\\dbsoft.ico"
+
+ATTACH BITMAP "..\\bitmaps\\32x32\\attach.bmp"
+
+CALENDAR BITMAP "..\\bitmaps\\32x32\\calendar.bmp"
+
+PEOPLE BITMAP "..\\bitmaps\\32x32\\people.bmp"
+
+PRINT BITMAP "..\\bitmaps\\32x32\\print.bmp"
+
+TIMEDATE BITMAP "..\\bitmaps\\32x32\\timedate.bmp"
+
+BACKWIN BITMAP "..\\bitmaps\\backSoft.bmp"
+
+BACKDLG BITMAP "..\\BITMAPS\\Backgrnd\\paper.bmp"
+
+GEFYRA DIALOG DISCARDABLE 15, 56, 278, 225
+STYLE WS_POPUP|WS_CAPTION|WS_VISIBLE
+CAPTION "ΑΡΧΕΙΟ ΓΕΦΥΡΑΣ ΑΠΟ Excel σε Epsilon "
+FONT 8, "Arial"
+{
+  CONTROL "012004.XLS", 102, "Edit", WS_BORDER|WS_TABSTOP, 76, 20, 145, 9
+  CONTROL "GEFYRA.TXT", 105, "Edit", WS_BORDER|WS_TABSTOP, 77, 42, 145, 9
+  CONTROL "", 108, "Edit", WS_BORDER|WS_TABSTOP, 86, 80, 53, 9
+  CONTROL "", 109, "Edit", WS_BORDER|WS_TABSTOP, 164, 80, 53, 9
+  CONTROL "Εναρξη", 100, "Button", BS_DEFPUSHBUTTON|WS_TABSTOP, 56, 173, 70, 14
+  CONTROL "Εξοδος", 101, "Button", BS_DEFPUSHBUTTON, 156, 175, 70, 14
+  CONTROL "", 103, "TMeter", 0x00000000, 51, 142, 175, 12
+  CONTROL "Ποσοστό Προόδου Εργασίας", 104, "Static", SS_CENTER|WS_BORDER|WS_GROUP, 50, 126, 174, 11
+  CONTROL "Ημερομηνία Εγγραφ?ν", -1, "Static", WS_GROUP, 85, 64, 113, 9
+  CONTROL "Εως", -1, "Static", WS_GROUP, 144, 80, 16, 12
+  CONTROL "Από", -1, "Static", WS_GROUP, 68, 79, 16, 12
+  CONTROL "xls", 106, "Button", BS_DEFPUSHBUTTON, 236, 13, 23, 15
+  CONTROL "txt", 107, "Button", BS_DEFPUSHBUTTON, 236, 37, 23, 15
+  CONTROL "dSoft  2020  ΜΥΡΙΣΚΟΣ ΙΩΑΝΝΗΣ", -1, "Edit", ES_READONLY|WS_BORDER, 74, 209, 130, 9
+}
+

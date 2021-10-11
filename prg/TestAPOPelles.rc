@@ -1,0 +1,23 @@
+// ΣΕΝΑΡΙΟ ΠΟΡΩΝ - δημιουργός: "Pelles C για Windows, έκδοση 8.00".
+
+#include <windows.h>
+#include <commctrl.h>
+#include <richedit.h>
+#include "GEFYRA.h"
+
+LANGUAGE LANG_GREEK,SUBLANG_GREEK_GREECE
+
+GEFYRA DIALOGEX DISCARDABLE 6, 18, 306, 230
+STYLE DS_SHELLFONT|WS_POPUP|DS_MODALFRAME|DS_CONTEXTHELP|DS_3DLOOK|WS_CAPTION|WS_SYSMENU|WS_VISIBLE
+CAPTION "Dialog"
+FONT 8, "Tahoma", 0, 0, 1
+{
+  CONTROL "OK", IDOK, "Button", WS_TABSTOP, 60, 180, 45, 15
+  CONTROL "Cancel", IDCANCEL, "Button", WS_TABSTOP, 208, 176, 45, 15
+  CONTROL "", 4001, "msctls_progress32", 0x00000000, 40, 144, 228, 9
+  CONTROL "Edit -- Κείμενο επεξεργασίας", 4002, "Edit", ES_AUTOHSCROLL|WS_BORDER|WS_TABSTOP, 32, 52, 216, 12
+  CONTROL "Edit -- Κείμενο επεξεργασίας", 4003, "Edit", ES_AUTOHSCROLL|WS_BORDER|WS_TABSTOP, 32, 68, 216, 12
+  CONTROL "XLS", 4004, "Button", WS_TABSTOP, 256, 52, 44, 14
+  CONTROL "PNI", 4005, "Button", WS_TABSTOP, 256, 68, 42, 14
+}
+

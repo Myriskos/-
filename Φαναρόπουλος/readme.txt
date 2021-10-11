@@ -1,1 +1,1 @@
-
+απο dos prompt  copy *.868 atrimhno.asc

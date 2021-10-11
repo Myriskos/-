@@ -1,0 +1,102 @@
+ #Borland make sample, (c) FiveTech Software 2005
+
+HBDIR=d:\xharbour
+BCDIR=d:\bcc63
+FWDIR=d:\fwh
+
+.path.OBJ = .\obj
+.path.PRG = .\
+.path.CH  = $(FWDIR)\include;$(HBDIR)\include
+.path.C   = .\
+.path.rc  = .\
+
+PRG =        \
+INITEST.PRG
+
+# C =          \
+# dlogbox.C                 
+
+PROJECT    : INITEST.exe
+
+INITEST.exe  : $(PRG:.PRG=.OBJ) $(C:.C=.OBJ) INITEST.res
+    echo off
+    echo $(BCDIR)\bin\c0w32.obj + > b32.bc
+
+# OBJ-Liste
+# -------------
+   echo obj\INITEST.obj, + >> b32.bc 
+
+  echo INITEST.exe, + >> b32.bc
+  echo INITEST.map, + >> b32.bc
+
+# Fivewin Lib`s für xHARBOUR
+# --------------------------------------
+
+  echo $(FWDIR)\lib\Fivehx.lib + >> b32.bc
+  echo $(FWDIR)\lib\FiveHC.lib + >> b32.bc
+    
+# xHARBOUR-Lib`s
+# -----------------------
+
+  IF EXIST INITEST.rc $(BCDIR)\bin\brc32 -r -d__FLAT__ INITEST
+
+  echo $(HBDIR)\lib\rtl.lib + >> b32.bc
+  echo $(HBDIR)\lib\vm.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTcgi.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTgui.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTpca.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTstd.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTwvg.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTwvt.lib + >> b32.bc
+  echo $(HBDIR)\lib\GTwin.lib + >> b32.bc
+  echo $(HBDIR)\lib\gtgui.lib + >> b32.bc
+  echo $(HBDIR)\lib\lang.lib + >> b32.bc
+  echo $(HBDIR)\lib\macro.lib + >> b32.bc
+  echo $(HBDIR)\lib\rdd.lib + >> b32.bc
+  echo $(HBDIR)\lib\dbfntx.lib + >> b32.bc
+  echo $(HBDIR)\lib\dbfcdx.lib + >> b32.bc
+  echo $(HBDIR)\lib\dbffpt.lib + >> b32.bc
+  echo $(HBDIR)\lib\hbsix.lib + >> b32.bc
+  echo $(HBDIR)\lib\debug.lib + >> b32.bc
+  echo $(HBDIR)\lib\common.lib + >> b32.bc
+  echo $(HBDIR)\lib\pp.lib + >> b32.bc
+  echo $(HBDIR)\lib\codepage.lib + >> b32.bc
+  echo $(HBDIR)\lib\pcrepos.lib + >> b32.bc
+  echo $(HBDIR)\lib\ct.lib + >> b32.bc
+  echo $(HBDIR)\lib\hbzip.lib + >> b32.bc
+  echo $(HBDIR)\lib\zlib.lib + >> b32.bc
+
+# Uncomment these two lines to use Advantage RDD
+# echo $(HBDIR)\lib\rddads.lib + >> b32.bc
+# echo $(HBDIR)\lib\Ace32.lib + >> b32.bc
+
+  echo $(BCDIR)\lib\cw32.lib + >> b32.bc
+  echo $(BCDIR)\lib\import32.lib + >> b32.bc
+  echo $(BCDIR)\lib\uuid.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\odbc32.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\rasapi32.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\nddeapi.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\msimg32.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\iphlpapi.lib + >> b32.bc
+  echo $(BCDIR)\lib\psdk\psapi.lib, >> b32.bc 
+  
+# Dbfstruct.res includes Symbol ICON : favorite.ico
+# ------------------------------------------------------------------------------------	
+
+  IF EXIST INITEST.res echo INITEST.res >> b32.bc
+     $(BCDIR)\bin\ilink32 -Gn -aa -Tpe -s -v @b32.bc
+  #   $(BCDIR)\bin\ilink32 -Gn -aa -Tpe -s @b32.bc
+  del b32.bc
+
+.PRG.OBJ:
+  $(HBDIR)\bin\harbour $< /N /W /Oobj\ /I$(FWDIR)\include;$(HBDIR)\include > clip.log
+  $(BCDIR)\bin\bcc32 -c -tWM -I$(HBDIR)\include -oobj\$& obj\$&.c
+
+.C.OBJ:
+  echo -c -tWM -D__HARBOUR__ -DHB_API_MACROS > tmp
+  echo -I$(HBDIR)\include;$(FWDIR)\include >> tmp
+  $(BCDIR)\bin\bcc32 -oobj\$& @tmp $&.c
+  del tmp
+
+INITEST.res : INITEST.rc
+  $(BCDIR)\bin\brc32.exe -r INITEST.rc

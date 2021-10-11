@@ -1,0 +1,292 @@
+Application
+===========
+   Path and name: C:\GEFYRES\GEFYRA.Exe (32 bits)
+   Size:   517,120 bytes
+   Time from start: 0 hours 1 mins 0 secs 
+   Error occurred at: 27-07-21, 20:42:26
+   Error description: Error BASE/1003  Variable does not exist: ARR_KFPA
+
+Stack Calls
+===========
+   Called from: KEFALAIO.PRG => OPENASCI(362)
+   Called from: KEFALAIO.PRG => (b)KEFALAIO(100)
+   Called from: BUTTON.PRG => TBUTTON:CLICK(0)
+   Called from: CONTROL.PRG => TBUTTON:HANDLEEVENT(0)
+   Called from: WINDOW.PRG => _FWH(0)
+   Called from:  => SENDMESSAGE(0)
+   Called from: DIALOG.PRG => TDIALOG:COMMAND(0)
+   Called from:  => TWINDOW:HANDLEEVENT(0)
+   Called from: DIALOG.PRG => TDIALOG:HANDLEEVENT(0)
+   Called from:  => DIALOGBOX(0)
+   Called from: DIALOG.PRG => TDIALOG:ACTIVATE(0)
+   Called from: KEFALAIO.PRG => KEFALAIO(106)
+   Called from: MENU.PRG => (b)MAIN(55)
+   Called from: MENU.PRG => TMENU:ACTIVATE(0)
+   Called from: BTNBMP.PRG => TBTNBMP:LBUTTONUP(0)
+   Called from:  => TWINDOW:HANDLEEVENT(0)
+   Called from: CONTROL.PRG => TCONTROL:HANDLEEVENT(0)
+   Called from: BTNBMP.PRG => TBTNBMP:HANDLEEVENT(0)
+   Called from: WINDOW.PRG => _FWH(0)
+   Called from:  => WINRUN(0)
+   Called from: WINDOW.PRG => TMDIFRAME:ACTIVATE(0)
+   Called from: MENU.PRG => MAIN(91)
+
+System
+======
+   CPU type: Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz 2400 Mhz
+   Hardware memory: 2048 megs
+
+   Free System resources: 90 %
+        GDI    resources: 90 %
+        User   resources: 90 %
+
+   Compiler version: xHarbour build 1.1.0 Intl. (SimpLex)
+   Windows version: 6.2, Build 9200 
+
+   Windows total applications running: 43
+      1 
+      2 Default IME
+      3 MSCTFIME UI
+      4 Μετρητής μπαταρίας
+      5 Network Flyout
+      6  Φαναρόπουλος  ΑΒ Βασιλόπουλος 
+      7 Εφαρμογή Διαχ/σης Αρχείων EXCEL 
+      8 VERCE v5.3, C:\GEFYRES\PRG\GEFYRA.VRC - [Ejecuciσn No. 1]
+      9 PRG
+     10 MED - unregistered - [C:\GEFYRES\PRG\KEFALAIO.PRG]
+     11 Adobe Acrobat
+     12 AcroMissingCompWClass
+     13 Font Capture
+     14 Αρθρο για κενά.pdf
+     15 Αρθρο για κενά.pdf - Adobe Acrobat Reader DC (32-bit)
+     16 DDE Server Window
+     17 Acrobat Instance Window
+     18 AcroBrokerSessionEndMsgListener
+     19 ESP32-C3 First Look - The Next ESP8266? - YouTube - Google Chrome
+     20 Αλληλογραφία
+     21 Εισερχόμενα - Yahoo ?- Αλληλογραφία
+     22 Window
+     23 Πρόοδος
+     24 .NET-BroadcastEventWindow.2.0.0.0.33c0d9d.0
+     25 G
+     26 CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+     27 Ρυθμίσεις
+     28 Microsoft Store
+     29 HPWU
+     30 Acronis Scheduler2 Helper
+     31 .NET-BroadcastEventWindow.2.0.0.0.378734a.0
+     32 BroadcastListenerWindow
+     33 ESET Proxy
+     34 Main message window
+     35 SecurityHealthSystray
+     36 MS_WebcheckMonitor
+     37 BluetoothNotificationAreaIconWindowClass
+     38 Windows Push Notifications Platform
+     39 Task Host Window
+     40 Malwarebytes Anti-Malware
+     41 DWM Notification Window
+     42 DUC v4.1.1
+     43 Program Manager
+
+Variables in use
+================
+   Procedure     Type   Value
+   ==========================
+   OPENASCI
+     Local   1:    C    ""
+     Local   2:    O    Class: TFILEREAD
+     Local   3:    C    "01790120210401000005183490064130100    MELISSA ΣΠΑΓΓΕΤΙΝΗ Ν10 500GR       00000000002400000000000000148800000000000019302000000000090074478742021040    3067733057     13000ΤΕΜΑΧΙΟ                     "
+     Local   4:    N    0
+     Local   5:    U    
+     Local   6:    N    0
+   (b)KEFALAIO
+   TBUTTON:CLICK
+     Local   1:    O    Class: TBUTTON
+   TBUTTON:HANDLEEVENT
+     Param   1:    N    2048
+     Param   2:    N    0
+     Param   3:    N    0
+     Local   1:    O    Class: TBUTTON
+   _FWH
+     Param   1:    N    0
+     Param   2:    N    2048
+     Param   3:    N    0
+     Param   4:    N    0
+     Param   5:    N    15
+     Local   1:    O    Class: TBUTTON
+   SENDMESSAGE
+     Param   1:    N    1705048
+     Param   2:    N    2048
+     Param   3:    N    0
+     Param   4:    N    0
+   TDIALOG:COMMAND
+     Param   1:    N    100
+     Param   2:    N    1705048
+     Local   1:    O    Class: TDIALOG
+     Local   2:    O    Class: TBUTTON
+     Local   3:    N    0
+     Local   4:    N    100
+     Local   5:    N    1705048
+   TWINDOW:HANDLEEVENT
+     Param   1:    N    273
+     Param   2:    N    100
+     Param   3:    N    1705048
+   TDIALOG:HANDLEEVENT
+     Param   1:    N    273
+     Param   2:    N    100
+     Param   3:    N    1705048
+     Local   1:    O    Class: TDIALOG
+   DIALOGBOX
+     Param   1:    N    4194304
+     Param   2:    C    "GEFYRA"
+     Param   3:    N    1508540
+     Param   4:    O    Class: TDIALOG
+   TDIALOG:ACTIVATE
+     Param   1:    U    
+     Param   2:    U    
+     Param   3:    U    
+     Param   4:    L    .T.
+     Param   5:    U    
+     Param   6:    L    .T.
+     Param   7:    B    {|| ... }
+     Param   8:    U    
+     Param   9:    U    
+     Param  10:    L    .F.
+     Local   1:    O    Class: TDIALOG
+     Local   2:    N    1508540
+     Local   3:    U    
+     Local   4:    U    
+     Local   5:    U    
+     Local   6:    O    Class: TDIALOG
+   KEFALAIO
+     Local   1:    U    
+     Local   2:    O    Class: TDIALOG
+     Local   3:    U    
+     Local   4:    U    
+     Local   5:    U    
+     Local   6:    U    
+     Local   7:    U    
+     Local   8:    U    
+   (b)MAIN
+     Param   1:    O    Class: TMENUITEM
+   TMENU:ACTIVATE
+     Param   1:    N    58
+     Param   2:    N    19
+     Param   3:    O    Class: TBAR
+     Param   4:    L    .F.
+     Local   1:    O    Class: TMENU
+     Local   2:    A    Len:    2
+   TBTNBMP:LBUTTONUP
+     Param   1:    N    38
+     Param   2:    N    109
+     Param   3:    O    Class: TBTNBMP
+     Local   1:    O    Class: TBAR
+     Local   2:    L    .T.
+   TWINDOW:HANDLEEVENT
+     Param   1:    N    514
+     Param   2:    N    0
+     Param   3:    N    2490477
+   TCONTROL:HANDLEEVENT
+     Param   1:    N    514
+     Param   2:    N    0
+     Param   3:    N    2490477
+     Local   1:    O    Class: TBTNBMP
+   TBTNBMP:HANDLEEVENT
+     Param   1:    N    514
+     Param   2:    N    0
+     Param   3:    N    2490477
+     Local   1:    O    Class: TBTNBMP
+   _FWH
+     Param   1:    N    2490477
+     Param   2:    N    514
+     Param   3:    N    0
+     Param   4:    N    2490477
+     Param   5:    N    4
+     Local   1:    O    Class: TBTNBMP
+   WINRUN
+     Param   1:    N    1508540
+   TMDIFRAME:ACTIVATE
+     Param   1:    C    "MAXIMIZED"
+     Param   2:    U    
+     Param   3:    U    
+     Param   4:    U    
+     Param   5:    U    
+     Param   6:    B    {|| ... }
+     Param   7:    U    
+     Param   8:    U    
+     Param   9:    U    
+     Param  10:    U    
+     Param  11:    U    
+     Param  12:    U    
+     Param  13:    U    
+     Param  14:    U    
+     Param  15:    U    
+     Param  16:    U    
+     Param  17:    B    {|| ... }
+     Param  18:    U    
+     Param  19:    U    
+     Local   1:    O    Class: TMDIFRAME
+     Local   2:    U    
+     Local   3:    U    
+   MAIN
+     Local   1:    O    Class: TBAR
+     Local   2:    U    
+     Local   3:    O    Class: TMENU
+     Local   4:    O    Class: TMENU
+     Local   5:    U    
+     Local   6:    O    Class: TBTNBMP
+     Local   7:    O    Class: TBTNBMP
+     Local   8:    O    Class: TBITMAP
+     Local   9:    O    Class: TFONT
+     Local  10:    O    Class: TICON
+
+Linked RDDs
+===========
+   DBF
+   DBFFPT
+   DBFBLOB
+   DBFNTX
+
+DataBases in use
+================
+
+Classes in use:
+===============
+     1 HASHENTRY
+     2 HBCLASS
+     3 HBOBJECT
+     4 TFONT
+     5 TWINDOW
+     6 TCONTROL
+     7 TICON
+     8 TBRUSH
+     9 TBITMAP
+    10 TMDIFRAME
+    11 TMENU
+    12 TMENUITEM
+    13 TMDICLIENT
+    14 TBAR
+    15 TRECT
+    16 TBTNBMP
+    17 TMSGBAR
+    18 TMSGITEM
+    19 TTIMER
+    20 TDIALOG
+    21 TGET
+    22 GET
+    23 TCLIPGET
+    24 TSAY
+    25 TMETER
+    26 TBUTTON
+    27 TFILEREAD
+    28 ERROR
+    29 TREG32
+
+Memory Analysis
+===============
+      97 Static variables
+
+   Dynamic memory consume:
+      Actual  Value:          0 bytes
+      Highest Value:          0 bytes
+

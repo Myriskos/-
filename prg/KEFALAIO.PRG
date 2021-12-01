@@ -245,7 +245,174 @@ ELSE
 
       if OldPara <> newPara
          OldPara := newPara
-         IF ROUND( (TOTAXIA+ TOTFPA) ,2) <> 0
+         ARTHRO()
+      endif
+
+
+      cDATE   := SUBSTR( cString ,07 ,08 )
+      cDATE   := CTOD(CONVDATE( cDATE ))
+      cDATE   := DTOC(cDATE)
+      ocPARA  := SUBSTR(cString , 120 ,03)
+      onPARA  := SUBSTR(cString , 127 ,15)
+      CodePROION := SUBSTR(cString , 25 ,15)
+
+
+
+      cFPA    := TRAN( CONVFPA( SUBSTR(cString , 168 , 5) ) , "##" )
+      cK_AXIA := NumWithDec(SUBSTR(cString ,  90 ,15))
+      cK_AXIA := tran(VAL(cK_AXIA)   ,"#########.##")
+      TOTAXIA += val(cK_AXIA)
+      cF_AXIA := NumWithDec(SUBSTR(cString , 105 ,15) )
+      cF_AXIA := tran( VAL(cF_AXIA) ,"#########.##")
+      TOTFPA +=  val(cF_AXIA)
+      cT_AXIA := ( ROUND( val(cK_AXIA),2) +  ROUND( val(cF_AXIA),2) )
+      cT_AXIA := tran( ROUND( cT_AXIA ,2)  ,"#########.##")
+      PROION  := SUBSTR(cString , 40,35)
+
+      //----Αθροιση ανα συν/στη ΦΠΑ
+      n:=1
+      if val(cFPA) == 0 ; n:= 1 ; endif
+      if val(cFPA) == 6 ; n:= 2 ; endif
+      if val(cFPA) ==13 ; n:= 3 ; endif
+      if val(cFPA) ==24 ; n:= 4 ; endif
+
+      ArrAxia[n] +=  val(cK_AXIA)
+      ArrFpa[n]  +=  val(cF_AXIA)
+
+      DO CASE
+       CASE TRIM(CodePROION) == "TransCharg"
+         Arr_dAxia[n][1] +=  val(cK_AXIA)
+         Arr_dFpa[n][1]  +=  val(cF_AXIA)
+
+       CASE TRIM(CodePROION) ==  bKENA(CodePROION)
+        //  msginfo( "    brhka keno    " )
+         Arr_kAxia[1][1]  += ( val(cK_AXIA) + val(cF_AXIA)   )
+
+       OTHERWISE
+        Arr_Axia[n][1] +=  val(cK_AXIA)
+        Arr_Fpa[n][1]  +=  val(cF_AXIA)
+      END CASE
+
+       //-------------------------------
+
+      LineArthrou := cDATE+"|"+cPARA+"|"+nPARA+"|"+cK_AXIA+"|"+cF_AXIA+"|"+cT_AXIA+"|"+cFPA +"|"+PROION
+
+   //  αναλυτικη γραμμή
+   // IF  ( ROUND( val(cK_AXIA),2) +  ROUND( val(cF_AXIA),2) ) <> 0
+   //   WRITELINE( LineArthrou )
+   // ENDIF
+
+
+   ENDIF
+
+ ENDDO
+ ARTHRO()
+    oFile:Close()
+ENDIF
+
+  FWRITE( Handle  , ENDL+ ENDF   )
+  FCLOSE(cGetPNI)
+    MSGINFO( " Η Εργασία Ολοκληρώθηκε επιτυχώς " ,"dbSoft"  )
+    SET DATE FORMAT TO "DD/MM/YYYY"
+ RETURN
+//--------------------------------------
+FUNCTION NumWithDec( cNUM )
+//--------------------------------------
+  L := SUBSTR( cNUM ,1 , 13 )
+  R := SUBSTR( cNUM ,14,  2 )
+  NewNum := l+"."+r
+RETURN (NewNum )
+
+//------------------------------
+STATIC FUNCTION CONVFPA( cF )
+//------------------------------
+LOCAL NS := "" , cC := ""
+
+   SIZE   := LEN( cF )
+   FOR i := 1 TO SIZE
+      NS := SUBSTR( cF , i , 1 )
+      IF ( NS == "C" .OR. NS == "0" )  ; NS := ""  ; ENDIF
+      cC += NS
+   NEXT
+ //PADL( cC ,05,"0")
+ IF cC == ""  ; cC := "00" ; ENDIF
+ IF cC == "6" ; cC := "06" ; ENDIF
+
+RETURN(  cC  )
+
+
+
+//--------------------------------------
+FUNCTION WRITELINE( cTEMP )
+//--------------------------------------
+  FWRITE( Handle  , cTEMP  + ENDL )
+
+RETURN
+
+//--------------------------------------
+FUNCTION CONVDATE( INDATE )
+//--------------------------------------
+LOCAL EXDATE := "" , MERA := "" , MHNAS := "" , ETOS := ""
+
+    ETOS := SUBSTR( INDATE ,1 ,4 )
+    MHNAS:= SUBSTR( INDATE ,5 ,2 )
+    MERA := SUBSTR( INDATE ,7 ,2 )
+    EXdATE := MERA +"/"+MHNAS+"/"+ETOS
+
+RETURN EXdATE
+
+
+
+//------------------------------
+STATIC FUNCTION CONVIDLOG( cIDLOG )
+//------------------------------
+LOCAL NS := "" , cC := ""
+   cIDLOG := TRIM(cIDLOG )
+   SIZE   := LEN( cIDLOG )
+   FOR i := 1 TO SIZE
+      NS := SUBSTR( cIDLOG , i , 1 )
+      IF NS == "." ; NS := "-"  ; ENDIF
+      cC += NS
+   NEXT
+
+RETURN(  cC  )
+
+//------------------------------
+STATIC FUNCTION CONVAITIOL( cAITIO )
+//------------------------------
+LOCAL NS := "" , cC := 0 ; NewAitio := ""
+   cAITIO := TRIM(cAITIO )
+   SIZE   := LEN( cAITIO )
+
+   FOR i := 1 TO SIZE
+      NS := SUBSTR( cAITIO , (SIZE-cC)  , 1 )
+      NewAitio += NS
+      IF NS == OEMTOANSI("(") .AND. cC++ > 5  ; EXIT ; ENDIF
+      cC++
+   NEXT
+
+  NS     := ""
+  cAITIO := ""
+  cC     := 0
+  SIZE:= LEN(NewAitio)
+
+
+   FOR i := 2 TO SIZE-1
+      NS := SUBSTR( NewAitio , ((SIZE-1)-cC)  , 1 )
+      IF NS != OEMTOANSI(" (") .OR. NS != OEMTOANSI(")")  ;  cAITIO += NS ; ENDIF
+      cC++
+   NEXT
+
+
+
+RETURN( LEFT( cAITIO,25 ) )
+
+
+//--------------------------------
+STATIC FUNCTION ARTHRO()
+//--------------------------------
+
+IF ROUND( (TOTAXIA+ TOTFPA) ,2) <> 0
             WRITELINE( " " )
            /*
             //-----------------------------------
@@ -360,167 +527,7 @@ ELSE
 
           Arr_kAxia[1][1]  := 0
 
-      endif
-
-
-      cDATE   := SUBSTR( cString ,07 ,08 )
-      cDATE   := CTOD(CONVDATE( cDATE ))
-      cDATE   := DTOC(cDATE)
-      ocPARA  := SUBSTR(cString , 120 ,03)
-      onPARA  := SUBSTR(cString , 127 ,15)
-      CodePROION := SUBSTR(cString , 25 ,15)
-
-
-
-      cFPA    := TRAN( CONVFPA( SUBSTR(cString , 168 , 5) ) , "##" )
-      cK_AXIA := NumWithDec(SUBSTR(cString ,  90 ,15))
-      cK_AXIA := tran(VAL(cK_AXIA)   ,"#########.##")
-      TOTAXIA += val(cK_AXIA)
-      cF_AXIA := NumWithDec(SUBSTR(cString , 105 ,15) )
-      cF_AXIA := tran( VAL(cF_AXIA) ,"#########.##")
-      TOTFPA +=  val(cF_AXIA)
-      cT_AXIA := ( ROUND( val(cK_AXIA),2) +  ROUND( val(cF_AXIA),2) )
-      cT_AXIA := tran( ROUND( cT_AXIA ,2)  ,"#########.##")
-      PROION  := SUBSTR(cString , 40,35)
-
-      //----Αθροιση ανα συν/στη ΦΠΑ
-      n:=1
-      if val(cFPA) == 0 ; n:= 1 ; endif
-      if val(cFPA) == 6 ; n:= 2 ; endif
-      if val(cFPA) ==13 ; n:= 3 ; endif
-      if val(cFPA) ==24 ; n:= 4 ; endif
-
-      ArrAxia[n] +=  val(cK_AXIA)
-      ArrFpa[n]  +=  val(cF_AXIA)
-
-      DO CASE
-       CASE TRIM(CodePROION) == "TransCharg"
-         Arr_dAxia[n][1] +=  val(cK_AXIA)
-         Arr_dFpa[n][1]  +=  val(cF_AXIA)
-
-       CASE TRIM(CodePROION) ==  bKENA(CodePROION)
-        //  msginfo( "    brhka keno    " )
-         Arr_kAxia[1][1]  += ( val(cK_AXIA) + val(cF_AXIA)   )
-
-       OTHERWISE
-        Arr_Axia[n][1] +=  val(cK_AXIA)
-        Arr_Fpa[n][1]  +=  val(cF_AXIA)
-      END CASE
-
-       //-------------------------------
-
-      LineArthrou := cDATE+"|"+cPARA+"|"+nPARA+"|"+cK_AXIA+"|"+cF_AXIA+"|"+cT_AXIA+"|"+cFPA +"|"+PROION
-
-   //  αναλυτικη γραμμή
-   // IF  ( ROUND( val(cK_AXIA),2) +  ROUND( val(cF_AXIA),2) ) <> 0
-   //   WRITELINE( LineArthrou )
-   // ENDIF
-
-
-   ENDIF
-
- ENDDO
-    oFile:Close()
-ENDIF
-
-  FWRITE( Handle  , ENDL+ ENDF   )
-  FCLOSE(cGetPNI)
-    MSGINFO( " Η Εργασία Ολοκληρώθηκε επιτυχώς " ,"dbSoft"  )
-    SET DATE FORMAT TO "DD/MM/YYYY"
- RETURN
-//--------------------------------------
-FUNCTION NumWithDec( cNUM )
-//--------------------------------------
-  L := SUBSTR( cNUM ,1 , 13 )
-  R := SUBSTR( cNUM ,14,  2 )
-  NewNum := l+"."+r
-RETURN (NewNum )
-
-//------------------------------
-STATIC FUNCTION CONVFPA( cF )
-//------------------------------
-LOCAL NS := "" , cC := ""
-
-   SIZE   := LEN( cF )
-   FOR i := 1 TO SIZE
-      NS := SUBSTR( cF , i , 1 )
-      IF ( NS == "C" .OR. NS == "0" )  ; NS := ""  ; ENDIF
-      cC += NS
-   NEXT
- //PADL( cC ,05,"0")
- IF cC == ""  ; cC := "00" ; ENDIF
- IF cC == "6" ; cC := "06" ; ENDIF
-
-RETURN(  cC  )
-
-
-
-//--------------------------------------
-FUNCTION WRITELINE( cTEMP )
-//--------------------------------------
-  FWRITE( Handle  , cTEMP  + ENDL )
-
 RETURN
-
-//--------------------------------------
-FUNCTION CONVDATE( INDATE )
-//--------------------------------------
-LOCAL EXDATE := "" , MERA := "" , MHNAS := "" , ETOS := ""
-
-    ETOS := SUBSTR( INDATE ,1 ,4 )
-    MHNAS:= SUBSTR( INDATE ,5 ,2 )
-    MERA := SUBSTR( INDATE ,7 ,2 )
-    EXdATE := MERA +"/"+MHNAS+"/"+ETOS
-
-RETURN EXdATE
-
-
-
-//------------------------------
-STATIC FUNCTION CONVIDLOG( cIDLOG )
-//------------------------------
-LOCAL NS := "" , cC := ""
-   cIDLOG := TRIM(cIDLOG )
-   SIZE   := LEN( cIDLOG )
-   FOR i := 1 TO SIZE
-      NS := SUBSTR( cIDLOG , i , 1 )
-      IF NS == "." ; NS := "-"  ; ENDIF
-      cC += NS
-   NEXT
-
-RETURN(  cC  )
-
-//------------------------------
-STATIC FUNCTION CONVAITIOL( cAITIO )
-//------------------------------
-LOCAL NS := "" , cC := 0 ; NewAitio := ""
-   cAITIO := TRIM(cAITIO )
-   SIZE   := LEN( cAITIO )
-
-   FOR i := 1 TO SIZE
-      NS := SUBSTR( cAITIO , (SIZE-cC)  , 1 )
-      NewAitio += NS
-      IF NS == OEMTOANSI("(") .AND. cC++ > 5  ; EXIT ; ENDIF
-      cC++
-   NEXT
-
-  NS     := ""
-  cAITIO := ""
-  cC     := 0
-  SIZE:= LEN(NewAitio)
-
-
-   FOR i := 2 TO SIZE-1
-      NS := SUBSTR( NewAitio , ((SIZE-1)-cC)  , 1 )
-      IF NS != OEMTOANSI(" (") .OR. NS != OEMTOANSI(")")  ;  cAITIO += NS ; ENDIF
-      cC++
-   NEXT
-
-
-
-RETURN( LEFT( cAITIO,25 ) )
-
-
 //-------------------------
 STATIC FUNCTION bKENA(cEIDken)
 //-------------------------

@@ -2,7 +2,7 @@
  * xHarbour build 1.1.0 Intl. (SimpLex)
  * Generated C source code from <LAMPROY.PRG>
  * Command: C:\Xharbour\bin\harbour.exe C:\GEFYRES\PRG\LAMPROY.PRG /n /es2 /gc1 /oC:\GEFYRES\PRG\LAMPROY /iC:\FWH\INCLUDE /iC:\xHarbour\include /iC:\FWH\include;C:\GEFYRES\PRG /iC:\Xharbour\include 
- * Created: 2021.07.29 19:24:14 (Borland C++ 5.5.1)
+ * Created: 2021.08.02 15:34:25 (Borland C++ 5.5.1)
  */
 
 #include "hbvmpub.h"
